@@ -1,22 +1,21 @@
 <?php
 
-use App\Http\Controllers\ContactsControllerEN;
-use App\Http\Controllers\ContactsControllerLT;
-use App\Http\Controllers\IndexControllerEN;
-use App\Http\Controllers\IndexControllerLT;
-use Illuminate\Support\Facades\App;
+use App\Http\Controllers\ContactsController;
+use App\Http\Controllers\IndexController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect('/lt');
 });
 
-Route::group(['middleware' => 'set-locale:lt', 'prefix' => 'lt'], function () {
-    Route::get('/', [IndexControllerLT::class, 'index']);
-    Route::get('/contact', [ContactsControllerLT::class, 'index']);
+// In here there's possibility to defined to locale from the domain, so it wouldn't be necessary to 
+// have these two groups of the same routes with different locales.
+Route::group(['prefix' => 'lt', 'middleware' => 'set-locale:lt'], function () {
+    Route::get('/', [IndexController::class, 'index']);
+    Route::get('/contact', [ContactsController::class, 'index']);
 });
 
-Route::group(['middleware' => 'set-locale:en', 'prefix' => 'en'], function () {
-    Route::get('/', [IndexControllerEN::class, 'index']);
-    Route::get('/contact', [ContactsControllerEN::class, 'index']);
+Route::group(['prefix' => 'en', 'middleware' => 'set-locale:en'], function () {
+    Route::get('/', [IndexController::class, 'index']);
+    Route::get('/contact', [ContactsController::class, 'index']);
 });
